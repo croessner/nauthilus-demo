@@ -1,0 +1,101 @@
+# File: nauthilus.yml
+
+server:
+  address: "0.0.0.0:8080"
+  instance_name: nauthilus_demo
+
+  default_http_request_header:
+    username: X-Nauthilus-Username
+    password: X-Nauthilus-Password
+    protocol: X-Nauthilus-Protocol
+    local_ip: X-Nauthilus-Local-IP
+    local_port: X-Nauthilus-Local-Port
+    client_ip: X-Nauthilus-Client-IP
+    client_port: X-Nauthilus-Client-Port
+    client_host: X-Nauthilus-Client-Host
+    ssl: X-Nauthilus-SSL
+
+  log:
+    color: true
+    level: debug
+
+  backends:
+    - cache
+    - lua
+
+  features:
+    - backend_server_monitoring
+
+  frontend:
+    enabled: false
+
+  dns:
+    timeout: 2
+    resolve_client_ip: false
+
+  redis:
+    database_number: 0
+    prefix: ntdemo_
+    pool_size: 10
+    password_nonce: 5yBOr5PKa8UQq8iXF44ceFWaWW3vO15W
+
+    master:
+      address: valkey:6379
+    replica:
+      address: valkey:6379
+
+  master_user:
+    enabled: true
+    delimiter: "*"
+
+  prometheus_timer:
+    enabled: true
+    labels:
+      - backend
+      - request
+
+backend_server_monitoring:
+  backend_servers:
+    - protocol: imap
+      host: backend-1
+      port: 143
+      deep_check: true
+
+    - protocol: imap
+      host: backend-2
+      port: 143
+      deep_check: true
+
+    - protocol: lmtp
+      host: backend-1
+      port: 24
+      deep_check: true
+
+    - protocol: lmtp
+      host: backend-2
+      port: 24
+      deep_check: true
+
+lua:
+  filters:
+    - name: backend_server_monitoring
+      script_path: /usr/app/lua-plugins.d/filters/monitoring.lua
+
+  custom_hooks:
+    - http_location: dovecot-session-cleaner
+      http_method: POST
+      script_path: /usr/app/lua-plugins.d/hooks/dovecot-session-cleaner.lua
+
+  config:
+    init_script_path: /usr/app/lua-plugins.d/init/init.lua
+    backend_script_path: /etc/nauthilus/lua/backend.lua
+
+  search:
+    - protocol:
+        - default
+      cache_name: dovecot
+
+    - protocol:
+        - smtp
+        - submission
+      cache_name: submission

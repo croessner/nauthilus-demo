@@ -1,0 +1,11 @@
+passdb {
+  driver = passwd-file
+  args = scheme=CRYPT username_format=%Ln /etc/dovecot/users
+  default_fields = nopassword=y
+}
+
+userdb {
+  driver = passwd-file
+  args = username_format=%Ln /etc/dovecot/users
+  override_fields = home=/srv/mail/%n
+}

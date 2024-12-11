@@ -1,0 +1,71 @@
+services:
+
+  director:
+    image: dovecot/dovecot:2.3-latest
+    container_name: director
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:2400:24/tcp"
+      - "127.0.0.1:1430:143/tcp"
+    volumes:
+      - ./director/config:/etc/dovecot:ro
+    networks:
+      - dovecot
+      - nauthilus
+
+  backend-1:
+    image: dovecot/dovecot:2.3-latest
+    container_name: backend-1
+    restart: unless-stopped
+    volumes:
+      - ./backend/conf.d:/etc/dovecot/conf.d:ro
+      - ./backend/users:/etc/dovecot/users:ro
+      - mail_store:/srv/mail
+    networks:
+      - dovecot
+
+  backend-2:
+    image: dovecot/dovecot:2.3-latest
+    container_name: backend-2
+    restart: unless-stopped
+    volumes:
+      - ./backend/conf.d:/etc/dovecot/conf.d:ro
+      - ./backend/users:/etc/dovecot/users:ro
+      - mail_store:/srv/mail
+    networks:
+      - dovecot
+
+  nauthilus:
+    image: ghcr.io/croessner/nauthilus:v1.4.1
+    container_name: nauthilus
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    ports:
+      - "127.0.0.1:8080:8080/tcp"
+    volumes:
+      - ./nauthilus/nauthilus.yml:/etc/nauthilus/nauthilus.yml:ro
+      - ./nauthilus/lua/backend.lua:/etc/nauthilus/lua/backend.lua:ro
+    networks:
+      - dovecot
+      - nauthilus
+    healthcheck:
+      test: ["CMD", "/usr/app/healthcheck", "--url", "http://127.0.0.1:8080/ping"]
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: valkey
+    restart: unless-stopped
+    environment:
+      VALKEY_EXTRA_FLAGS: "--loglevel warning --bind 0.0.0.0"
+    networks:
+      - nauthilus
+
+networks:
+  dovecot:
+  nauthilus:
+
+volumes:
+  mail_store:

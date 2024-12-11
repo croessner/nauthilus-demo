@@ -1,0 +1,12 @@
+{
+  "username": "testuser",
+  "password": "testpassword",
+  "client_ip": "127.0.0.1",
+  "client_port": "12345",
+  "client_hostname": "localhost.localdomain",
+  "client_id": "Test user agent with JSON",
+  "local_ip": "127.0.0.1",
+  "local_port": "143",
+  "service": "imap",
+  "method": "plain"
+}
