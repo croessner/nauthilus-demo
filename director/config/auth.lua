@@ -68,7 +68,6 @@ local function query_db(request, password, dbtype)
     auth_request:add_header("X-Nauthilus-Local-IP", local_ip)
     auth_request:add_header("X-Nauthilus-Local-Port", local_port)
     auth_request:add_header("X-Nauthilus-Protocol", request.service)
-    auth_request:add_header("X-Nauthilus-Service", "Dovecot")
 
     if request.secured == "TLS" or request.secured == "secured" then
         auth_request:add_header("X-Nauthilus-SSL", "1")
