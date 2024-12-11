@@ -36,7 +36,7 @@ services:
       - dovecot
 
   nauthilus:
-    image: ghcr.io/croessner/nauthilus:v1.4.1
+    image: ghcr.io/croessner/nauthilus:v1.4.2
     container_name: nauthilus
     restart: unless-stopped
     security_opt:
