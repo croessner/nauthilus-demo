@@ -148,7 +148,7 @@ function auth_passdb_lookup(request)
     if type(extra_fields) == "table" then
         extra_fields.nopassword = "y"
     else
-        extra_fields { nopassword = "y" }
+        extra_fields = { nopassword = "y" }
     end
 
     return result, extra_fields
