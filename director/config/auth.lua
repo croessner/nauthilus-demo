@@ -61,7 +61,7 @@ local function query_db(request, password, dbtype)
     end
 
     auth_request:add_header("X-Nauthilus-Service", "Dovecot")
-    auth_request:add_header("X-Nauthilus-Username", request.user)
+    auth_request:add_header("X-Nauthilus-Username", request.username)
     auth_request:add_header("X-Nauthilus-Password", password)
     auth_request:add_header("X-Nauthilus-Client-IP", remote_ip)
     auth_request:add_header("X-Nauthilus-Client-Port", remote_port)

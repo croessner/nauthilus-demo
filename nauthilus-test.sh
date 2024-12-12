@@ -4,7 +4,7 @@ echo "###"
 echo "############# Deliver test email"
 echo "###"
 echo
-swaks --protocol LMTP --server 127.0.0.1:2400 --from test@example.com --to testuser
+swaks --protocol LMTP --server 127.0.0.1:2400 --from test@example.test --to testuser@foobar.test
 
 echo
 echo "###"
