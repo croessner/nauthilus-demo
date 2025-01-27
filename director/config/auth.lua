@@ -14,7 +14,7 @@ local USERDB = "userdb"
 
 -- HTTP defaults
 local http_client = dovecot.http.client{
-    request_timeout = "30s";
+    request_timeout = "5s";
     request_max_attempts = 3;
     user_agent = "Dovecot/2.4";
 }
