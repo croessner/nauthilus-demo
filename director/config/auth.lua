@@ -60,8 +60,16 @@ local function query_db(request, password, dbtype)
     if username == nil then
         username = request.user
     end
-    if service == nil then
-        service = "imap" -- Broken in 2.4.0!
+    if service == nil then -- Broken in Dovecot 2.4.0
+        if local_port == "143" then
+            service = "imap"
+        elseif local_port == "110" then
+            service = "pop3"
+        elseif local_port == "24" then
+            service = "lmtp"
+        else
+            service = "default"
+        end
     end
 
     auth_request:add_header("X-Nauthilus-Service", "Dovecot")
