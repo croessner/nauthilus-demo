@@ -1,15 +1,12 @@
-passdb {
-  driver = lua
-  args = file=/etc/dovecot/auth.lua blocking=yes
+passdb lua {
+  lua_file = /etc/dovecot/auth.lua
 }
 
-userdb {
-  driver = prefetch
+userdb prefetch {
 }
 
-userdb {
-  driver = lua
-  args = file=/etc/dovecot/auth.lua blocking=yes
+userdb lua {
+  lua_file = /etc/dovecot/auth.lua
 
   skip = never
   result_success = continue-ok

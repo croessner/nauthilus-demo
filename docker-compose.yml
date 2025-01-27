@@ -1,7 +1,7 @@
 services:
 
   director:
-    image: dovecot/dovecot:2.3-latest
+    image: dovecot/dovecot:2.4-latest
     container_name: director
     restart: unless-stopped
     ports:
@@ -14,7 +14,7 @@ services:
       - nauthilus
 
   backend-1:
-    image: dovecot/dovecot:2.3-latest
+    image: dovecot/dovecot:2.4-latest
     container_name: backend-1
     restart: unless-stopped
     volumes:
@@ -25,7 +25,7 @@ services:
       - dovecot
 
   backend-2:
-    image: dovecot/dovecot:2.3-latest
+    image: dovecot/dovecot:2.4-latest
     container_name: backend-2
     restart: unless-stopped
     volumes:
@@ -36,7 +36,7 @@ services:
       - dovecot
 
   nauthilus:
-    image: ghcr.io/croessner/nauthilus:v1.4.2
+    image: ghcr.io/croessner/nauthilus:v1.4.5
     container_name: nauthilus
     restart: unless-stopped
     security_opt:
