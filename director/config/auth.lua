@@ -14,6 +14,8 @@ local USERDB = "userdb"
 
 -- HTTP defaults
 local http_client = dovecot.http.client{
+    request_timeout = "30s";
+    request_max_attempts = 3;
     user_agent = "Dovecot/2.4";
 }
 
@@ -24,7 +26,7 @@ local function query_db(request, password, dbtype)
     local local_ip = request.local_ip
     local local_port = request.local_port
     local client_id = request.client_id
-    local service = request.service
+    local protocol = request.protocol
     local qs_noauth = ""
     local extra_fields = {}
 
@@ -60,16 +62,8 @@ local function query_db(request, password, dbtype)
     if username == nil then
         username = request.user
     end
-    if service == nil then -- Broken in Dovecot 2.4.0
-        if local_port == "143" then
-            service = "imap"
-        elseif local_port == "110" then
-            service = "pop3"
-        elseif local_port == "24" then
-            service = "lmtp"
-        else
-            service = "default"
-        end
+    if protocol == nil then
+        protocol = "default"
     end
 
     auth_request:add_header("X-Nauthilus-Service", "Dovecot")
@@ -79,7 +73,7 @@ local function query_db(request, password, dbtype)
     auth_request:add_header("X-Nauthilus-Client-Port", remote_port)
     auth_request:add_header("X-Nauthilus-Local-IP", local_ip)
     auth_request:add_header("X-Nauthilus-Local-Port", local_port)
-    auth_request:add_header("X-Nauthilus-Protocol", service)
+    auth_request:add_header("X-Nauthilus-Protocol", protocol)
 
     if request.secured == "TLS" or request.secured == "secured" then
         auth_request:add_header("X-Nauthilus-SSL", "1")
@@ -99,7 +93,7 @@ local function query_db(request, password, dbtype)
     local nauthilus_session = auth_response:header("X-Nauthilus-Session")
     local proxy_host = auth_response:header("X-Nauthilus-Proxy-Host")
 
-    dovecot.i_info("request=" .. dbtype .. " service=" .. service .. " proxy_host=" .. proxy_host .. " auth_status_code=" .. tostring(auth_status_code) .. " auth_status_message=<" .. auth_status_message .. "> nauthilus_session=" .. nauthilus_session)
+    dovecot.i_info("request=" .. dbtype .. " protocol=" .. protocol .. " proxy_host=" .. proxy_host .. " auth_status_code=" .. tostring(auth_status_code) .. " auth_status_message=<" .. auth_status_message .. "> nauthilus_session=" .. nauthilus_session)
 
     -- Handle valid logins
     if auth_status_code == 200 then

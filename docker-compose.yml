@@ -47,7 +47,7 @@ services:
       - "127.0.0.1:8080:8080/tcp"
     volumes:
       - ./nauthilus/nauthilus.yml:/etc/nauthilus/nauthilus.yml:ro
-      - ./nauthilus/lua/backend.lua:/etc/nauthilus/lua/backend.lua:ro
+      - ./nauthilus/lua:/etc/nauthilus/lua:ro
     networks:
       - dovecot
       - nauthilus

@@ -79,12 +79,12 @@ backend_server_monitoring:
 lua:
   filters:
     - name: backend_server_monitoring
-      script_path: /usr/app/lua-plugins.d/filters/monitoring.lua
+      script_path: /etc/nauthilus/lua/monitoring.lua
 
   custom_hooks:
     - http_location: dovecot-session-cleaner
       http_method: POST
-      script_path: /usr/app/lua-plugins.d/hooks/dovecot-session-cleaner.lua
+      script_path: /etc/nauthilus/lua/dovecot-session-cleaner.lua
 
   config:
     init_script_path: /usr/app/lua-plugins.d/init/init.lua
