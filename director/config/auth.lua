@@ -74,14 +74,12 @@ local function query_db(request, password, dbtype)
     auth_request:add_header("X-Nauthilus-Local-IP", local_ip)
     auth_request:add_header("X-Nauthilus-Local-Port", local_port)
     auth_request:add_header("X-Nauthilus-Protocol", protocol)
+    auth_request:add_header("X-Dovecot-Proxy-Target", remote_ip .. ":" .. remote_port)
 
     if request.secured == "TLS" or request.secured == "secured" then
         auth_request:add_header("X-Nauthilus-SSL", "1")
     end
 
-    if request.session ~= nil then
-        auth_request:add_header("X-Dovecot-Session", request.session)
-    end
 
     -- Send
     local auth_response = auth_request:submit()
